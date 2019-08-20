@@ -3,6 +3,7 @@
 namespace Bilyiv\RequestDataBundle\Mapper;
 
 use Bilyiv\RequestDataBundle\Exception\NotSupportedFormatException;
+use Bilyiv\RequestDataBundle\RequestDataInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -13,10 +14,10 @@ interface MapperInterface
     /**
      * Map request to certain object.
      *
-     * @param Request $request
-     * @param object  $object
+     * @param Request              $request
+     * @param RequestDataInterface $requestDataObject
      *
      * @throws NotSupportedFormatException
      */
-    public function map(Request $request, object $object): void;
+    public function map(Request $request, RequestDataInterface $requestDataObject): void;
 }

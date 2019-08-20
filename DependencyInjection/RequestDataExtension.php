@@ -19,11 +19,5 @@ class RequestDataExtension extends Extension
     {
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
-
-        $configuration = new Configuration();
-        $config = $this->processConfiguration($configuration, $configs);
-
-        $definition = $container->getDefinition('request_data.controller_listener');
-        $definition->replaceArgument('$prefix', $config['prefix']);
     }
 }

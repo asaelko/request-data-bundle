@@ -6,6 +6,7 @@ use Bilyiv\RequestDataBundle\Exception\NotSupportedFormatException;
 use Bilyiv\RequestDataBundle\Extractor\ExtractorInterface;
 use Bilyiv\RequestDataBundle\Formats;
 use Bilyiv\RequestDataBundle\FormatSupportableInterface;
+use Bilyiv\RequestDataBundle\RequestDataInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -43,11 +44,11 @@ class Mapper implements MapperInterface
     /**
      * {@inheritdoc}
      */
-    public function map(Request $request, object $object): void
+    public function map(Request $request, RequestDataInterface $requestDataObject): void
     {
         $format = $this->extractor->extractFormat($request);
-        $formatSupportable = $object instanceof FormatSupportableInterface;
-        if (!$format || ($formatSupportable && !\in_array($format, $object::getSupportedFormats()))) {
+        $formatSupportable = $requestDataObject instanceof FormatSupportableInterface;
+        if (!$format || ($formatSupportable && !\in_array($format, $requestDataObject::getSupportedFormats()))) {
             throw new NotSupportedFormatException();
         }
 
@@ -57,22 +58,22 @@ class Mapper implements MapperInterface
         }
 
         if (Formats::FORM === $format && \is_array($data)) {
-            $this->mapForm($data, $object);
+            $this->mapForm($data, $requestDataObject);
             return;
         }
 
-        $this->serializer->deserialize($data, \get_class($object), $format, ['object_to_populate' => $object]);
+        $this->serializer->deserialize($data, \get_class($requestDataObject), $format, ['object_to_populate' => $requestDataObject]);
     }
 
     /**
-     * @param array  $data
-     * @param object $object
+     * @param array                $data
+     * @param RequestDataInterface $requestDataObject
      */
-    protected function mapForm(array $data, object $object): void
+    protected function mapForm(array $data, RequestDataInterface $requestDataObject): void
     {
         foreach ($data as $propertyPath => $propertyValue) {
-            if ($this->propertyAccessor->isWritable($object, $propertyPath)) {
-                $this->propertyAccessor->setValue($object, $propertyPath, $propertyValue);
+            if ($this->propertyAccessor->isWritable($requestDataObject, $propertyPath)) {
+                $this->propertyAccessor->setValue($requestDataObject, $propertyPath, $propertyValue);
             }
         }
     }

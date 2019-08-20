@@ -2,6 +2,7 @@
 
 namespace Bilyiv\RequestDataBundle\Event;
 
+use Bilyiv\RequestDataBundle\RequestDataInterface;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
@@ -10,19 +11,19 @@ use Symfony\Component\EventDispatcher\Event;
 class FinishEvent extends Event
 {
     /**
-     * @var object
+     * @var RequestDataInterface
      */
     protected $requestData;
 
-    public function __construct(object $requestData)
+    public function __construct(RequestDataInterface $requestData)
     {
         $this->requestData = $requestData;
     }
 
     /**
-     * @return object
+     * @return RequestDataInterface
      */
-    public function getRequestData(): object
+    public function getRequestData(): RequestDataInterface
     {
         return $this->requestData;
     }

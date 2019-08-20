@@ -6,6 +6,7 @@ use Bilyiv\RequestDataBundle\Event\FinishEvent;
 use Bilyiv\RequestDataBundle\Events;
 use Bilyiv\RequestDataBundle\Exception\NotSupportedFormatException;
 use Bilyiv\RequestDataBundle\Mapper\MapperInterface;
+use Bilyiv\RequestDataBundle\RequestDataInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 
@@ -24,16 +25,10 @@ class ControllerListener
      */
     private $dispatcher;
 
-    /**
-     * @var string
-     */
-    private $prefix;
-
-    public function __construct(MapperInterface $mapper, EventDispatcherInterface $dispatcher, string $prefix)
+    public function __construct(MapperInterface $mapper, EventDispatcherInterface $dispatcher)
     {
         $this->mapper = $mapper;
         $this->dispatcher = $dispatcher;
-        $this->prefix = $prefix;
     }
 
     /**
@@ -58,7 +53,7 @@ class ControllerListener
         foreach ($parameters as $parameter) {
             $class = $parameter->getClass();
 
-            if (null !== $class && 0 === \strpos($class->getName(), $this->prefix)) {
+            if (null !== $class && in_array(RequestDataInterface::class, $class->getInterfaceNames())) {
                 $request = $event->getRequest();
 
                 $object = $class->newInstance();

@@ -20,7 +20,5 @@ services:
 
     request_data.controller_listener:
         class: 'Bilyiv\RequestDataBundle\EventListener\ControllerListener'
-        arguments:
-            $prefix: ''
         tags:
             - {name: 'kernel.event_listener', event: 'kernel.controller'}

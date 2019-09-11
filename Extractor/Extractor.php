@@ -32,7 +32,11 @@ class Extractor implements ExtractorInterface
             return $this->converter->convert($request->query->all());
         }
 
-        if (Request::METHOD_POST === $method || Request::METHOD_PUT === $method || Request::METHOD_PATCH === $method) {
+        if (Request::METHOD_POST === $method
+            || Request::METHOD_PUT === $method
+            || Request::METHOD_PATCH === $method
+            || Request::METHOD_DELETE === $method
+        ) {
             if (Formats::FORM === $format) {
                 return $request->files->all() + $request->request->all();
             }
